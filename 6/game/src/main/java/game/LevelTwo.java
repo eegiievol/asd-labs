@@ -11,8 +11,8 @@ public class LevelTwo extends LevelState{
         totalPoints += newPoints * 2;
         game.setTotalPoints(totalPoints);
         System.out.println("points="+totalPoints+" level=2");
-        if (totalPoints > 20) { // move to level 3
-            LevelState level = new LevelThree(game);
+        if (totalPoints >= 15) { // move to level 2.5
+            LevelState level = new Level2_5(game);
             game.setLevelState(level);
         }
     }

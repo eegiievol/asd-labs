@@ -1,0 +1,10 @@
+without Composite:
+we have to keep track of current processing XMLNode using Stack data structure.
+It gets complicated and messy when we have huge XML file. 
+With small file, it works fine. 
+
+with Composite:
+it allows flexible and extensible design with ease of scale. 
+Multiple hierarchy allows any node to be root or child node with removed/add child methods. 
+Adding new node into structure will not destroy overall structure. 
+Separation of concern: parse xml document from processing data.
