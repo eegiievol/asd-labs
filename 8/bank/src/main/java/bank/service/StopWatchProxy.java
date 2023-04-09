@@ -5,48 +5,23 @@ import java.util.Collection;
 import bank.dao.AccountDAO;
 import bank.dao.IAccountDAO;
 import bank.domain.Account;
+import java.lang.reflect.*;
+public class StopWatchProxy implements InvocationHandler {
+	private Object target;
 
-public class StopWatchProxy implements IAccountDAO {
-    LoggingProxy accountDAO;
-    
-
-	public StopWatchProxy(LoggingProxy accountDAO) {
-		this.accountDAO = accountDAO;
+	public StopWatchProxy(Object target) {
+		this.target = target;
 	}
 
-
-	public Account loadAccount(long customerId) {
+	@Override
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		StopWatch stopwatch = new StopWatch();
 		stopwatch.start();
-		Account account = accountDAO.loadAccount(customerId);
+		// invoke the method on the target
+		Object returnValue = method.invoke(target, args);
 		stopwatch.stop();
-		System.out.println("The method AccountDAO.loadAccount took " + stopwatch.getMillis() + " ms");
-		return account;
+		System.out.println("The method " + method.getName() + " took " + stopwatch.getMillis() + " ms");
+		return returnValue;
 	}
-
-    public void saveAccount(Account account) {
-		StopWatch stopwatch = new StopWatch();
-		stopwatch.start();
-		accountDAO.saveAccount(account);
-		stopwatch.stop();
-		System.out.println("The method AccountDAO.loadAccount took " + stopwatch.getMillis() + " ms");
-    }
-
-    public void updateAccount(Account account) {
-		StopWatch stopwatch = new StopWatch();
-		stopwatch.start();
-		accountDAO.updateAccount(account);
-		stopwatch.stop();
-		System.out.println("The method AccountDAO.loadAccount took " + stopwatch.getMillis() + " ms");
-    }
-
-    public Collection<Account> getAccounts() {
-		StopWatch stopwatch = new StopWatch();
-		stopwatch.start();
-		Collection<Account> accounts =  accountDAO.getAccounts();
-		stopwatch.stop();
-		System.out.println("The method AccountDAO.loadAccount took " + stopwatch.getMillis() + " ms");
-		return accounts;
-    }
     
 }

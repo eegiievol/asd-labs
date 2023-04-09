@@ -10,9 +10,11 @@ import java.util.Collection;
 public class AccountAdapter implements IAccountAdapter {
     private IAccountDAO accountDAO = new AccountDAO();
     private LoggingProxy loggerProxy = new LoggingProxy((AccountDAO) accountDAO);
-    private StopWatchProxy stopWatchProxy = new StopWatchProxy(loggerProxy);
+    CustomerDAO stopWatchProxy = (CustomerDAO)
+            Proxy.newProxyInstance(classLoader,
+                    new Class[] { CustomerDAO.class },
+                    new StopWatchProxy(customerDAO));
 
-    @Override
     public Account createAccount(long accountNumber, String customerName) {
         Account account = new Account(accountNumber);
         Customer customer = new Customer(customerName);
@@ -21,19 +23,16 @@ public class AccountAdapter implements IAccountAdapter {
         return account;
     }
 
-    @Override
     public Account getAccount(long accountNumber) {
         Account account = stopWatchProxy.loadAccount(accountNumber);
         return account;
     }
 
-    @Override
     public Collection<Account> getAllAccounts() {
 
         return stopWatchProxy.getAccounts();
     }
 
-    @Override
     public void deposit(long accountNumber, double amount) {
         Account account = stopWatchProxy.loadAccount(accountNumber);
         account.deposit(amount);
